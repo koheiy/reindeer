@@ -10,10 +10,15 @@ import net.gpedro.integrations.slack.SlackMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 import javax.annotation.PostConstruct;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 @Slf4j
 @Component
@@ -30,6 +35,9 @@ public class ReindeerBot extends Bot {
 
     @Value("${targetWindowName}")
     private String targetWindowName;
+
+    @Value("${bgmFilePath}")
+    private String bgmFilePath;
 
     @Override
     public String getSlackToken() {
@@ -52,6 +60,7 @@ public class ReindeerBot extends Bot {
         if (!input.equals("update")) return;
         setFocusWindow("target");
         Thread.sleep(2000);
+        playSound();
         keyPress(KeyEvent.VK_F5);
     }
 
@@ -76,6 +85,17 @@ public class ReindeerBot extends Bot {
             robot.keyPress(key);
             robot.keyRelease(key);
         } catch (AWTException e) {
+            log.warn("", e);
+        }
+    }
+
+    private void playSound() {
+        try {
+            System.out.println("start");
+            InputStream in = new FileInputStream("");
+            AudioStream as = new AudioStream(in);
+            AudioPlayer.player.start(as);
+        } catch (IOException e) {
             log.warn("", e);
         }
     }

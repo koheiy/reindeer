@@ -3,3 +3,4 @@ slackBotUser:
 slackWebhookUrl:
 rtmUrl:
 targetWindowName:
+bgmFilePath:
