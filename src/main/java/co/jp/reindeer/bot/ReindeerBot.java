@@ -92,7 +92,7 @@ public class ReindeerBot extends Bot {
     private void playSound() {
         try {
             System.out.println("start");
-            InputStream in = new FileInputStream("");
+            InputStream in = new FileInputStream(bgmFilePath);
             AudioStream as = new AudioStream(in);
             AudioPlayer.player.start(as);
         } catch (IOException e) {
