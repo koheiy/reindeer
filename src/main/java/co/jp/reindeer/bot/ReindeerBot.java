@@ -58,7 +58,7 @@ public class ReindeerBot extends Bot {
     public void onReceiveDM(WebSocketSession session, Event event) throws InterruptedException {
         String input = event.getText().replaceAll("\\<.*\\> ", "");
         if (!input.equals("update")) return;
-        setFocusWindow("target");
+        setFocusWindow(targetWindowName);
         Thread.sleep(2000);
         playSound();
         keyPress(KeyEvent.VK_F5);
