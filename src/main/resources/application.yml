@@ -4,3 +4,5 @@ slackWebhookUrl:
 rtmUrl:
 targetWindowName:
 bgmFilePath:
+executeCommand:
+commandArgument: 

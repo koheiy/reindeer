@@ -39,6 +39,12 @@ public class ReindeerBot extends Bot {
     @Value("${bgmFilePath}")
     private String bgmFilePath;
 
+    @Value("${executeCommand}")
+    private String executeCommand;
+
+    @Value("${commandArgument}")
+    private String commandArgument;
+
     @Override
     public String getSlackToken() {
         return slackToken;
@@ -54,14 +60,22 @@ public class ReindeerBot extends Bot {
         System.setProperty("java.awt.headless", "false");
     }
 
-    @Controller(events = {EventType.DIRECT_MENTION, EventType.DIRECT_MESSAGE})
-    public void onReceiveDM(WebSocketSession session, Event event) throws InterruptedException {
-        String input = event.getText().replaceAll("\\<.*\\> ", "");
-        if (!input.equals("update")) return;
+    @Controller(events = {EventType.DIRECT_MENTION, EventType.DIRECT_MESSAGE}, pattern = "update")
+    public void onReceiveUpdate(WebSocketSession session, Event event) throws InterruptedException {
         setFocusWindow(targetWindowName);
         Thread.sleep(2000);
         playSound();
         keyPress(KeyEvent.VK_F5);
+    }
+
+    @Controller(events = {EventType.DIRECT_MENTION, EventType.DIRECT_MESSAGE}, pattern = "exec")
+    public void onReceiveExec(WebSocketSession session, Event event) throws InterruptedException {
+        playSound();
+        SystemCallUtil.execute(executeCommand, commandArgument);
+    }
+
+    private String replaceUserIdToBlank(String input) {
+        return input.replaceAll("\\<.*\\> ", "");
     }
 
     private void reply(String message, String channel) {
@@ -90,10 +104,7 @@ public class ReindeerBot extends Bot {
     }
 
     private void playSound() {
-        try {
-            System.out.println("start");
-            InputStream in = new FileInputStream(bgmFilePath);
-            AudioStream as = new AudioStream(in);
+        try (AudioStream as = new AudioStream(new FileInputStream(bgmFilePath))) {
             AudioPlayer.player.start(as);
         } catch (IOException e) {
             log.warn("", e);
